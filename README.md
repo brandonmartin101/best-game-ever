@@ -1,7 +1,5 @@
 # Best Game EVER
 
---------
-
 ## Deployment
 
 The web game is deployed at <YOUR DEPLOYED GITHUB.IO URL GOES HERE>.
