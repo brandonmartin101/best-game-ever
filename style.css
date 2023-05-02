@@ -1,0 +1,16 @@
+body {
+    text-align: center;
+}
+h1 {
+    margin: 60px auto 20px;
+}
+p {
+    max-width: 500px;
+    margin: 0 auto;
+}
+canvas {
+    border: 1px solid #222;
+    background: #222;
+    margin: 40px auto 0;
+    box-shadow: 0 0 15px black;
+}
