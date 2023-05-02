@@ -2,7 +2,7 @@
 
 ## Deployment
 
-The web game is deployed at <YOUR DEPLOYED GITHUB.IO URL GOES HERE>.
+The web game is deployed at [Best Game Ever](https://brandonmartin101.github.io/best-game-ever/).
 
 
 ## Project Description
