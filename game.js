@@ -1,41 +1,45 @@
 // Get canvas element and context
 const canvas = document.getElementById('game-canvas');
-const ctx = canvas.getContext('2d');
-
-// Set canvas dimensions
-canvas.width = 800;
-canvas.height = 600;
+const context = canvas.getContext('2d');
+canvas.width = 1000;
+canvas.height = 700;
+let score = 0;
+let highScore = localStorage.getItem('highScore') || 0;
+const asteroids = [];
 
 // Create spaceship object
 const spaceship = {
 	x: 100,
 	y: canvas.height / 2,
-	speed: 5,
-	width: 50,
-	height: 50,
+	speed: 7,
+	width: 20,
+	height: 20,
 };
 
-// Create asteroid array
-const asteroids = [];
+// Draw starfield background
+const stars = 200;
+for (let i = 0; i < stars; i++) {
+    context.fillStyle = '#aaa';
+	context.fillRect(Math.random() * canvas.offsetWidth, Math.random() * canvas.offsetHeight, 1, 1);
+}
 
-// Create score variable
-let score = 0;
-
-// Create game loop
 function gameLoop() {
-	// Clear canvas
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	context.clearRect(0, 0, canvas.width, canvas.height);
 
 	// Move spaceship
-	if (keys.up) {
-		spaceship.y -= spaceship.speed;
-	} else if (keys.down) {
-		spaceship.y += spaceship.speed;
-	}
+	if (keys.up) spaceship.y -= spaceship.speed;
+	if (keys.down) spaceship.y += spaceship.speed;
+	if (keys.left) spaceship.x -= spaceship.speed;
+	if (keys.right) spaceship.x += spaceship.speed;
 
 	// Draw spaceship
-	ctx.fillStyle = '#eee';
-	ctx.fillRect(spaceship.x, spaceship.y, spaceship.width, spaceship.height);
+	context.fillStyle = '#eee';
+	// context.fillRect(spaceship.x, spaceship.y, spaceship.width, spaceship.height);
+	context.beginPath();
+	context.moveTo(spaceship.x + spaceship.width / 2, spaceship.y);
+	context.lineTo(spaceship.x - spaceship.width / 2, spaceship.y + spaceship.height / 2);
+	context.lineTo(spaceship.x - spaceship.width / 2, spaceship.y - spaceship.height / 2);
+	context.fill();
 
 	// Spawn new asteroid
 	if (Math.random() < 0.02) {
@@ -51,36 +55,46 @@ function gameLoop() {
 	// Move asteroids
 	asteroids.forEach((asteroid, index) => {
 		asteroid.x -= asteroid.speed;
-
-		// Check for collision with spaceship
-		const dx = asteroid.x - (spaceship.x + spaceship.width / 2);
-		const dy = asteroid.y - (spaceship.y + spaceship.height / 2);
-		const distance = Math.sqrt(dx ** 2 + dy ** 2);
-		if (distance < asteroid.radius + spaceship.width / 2) {
+		// Check for collision
+		// const dx = asteroid.x - (spaceship.x + spaceship.width / 2);
+		// const dy = asteroid.y - (spaceship.y + spaceship.height);
+		// const distance = Math.sqrt(dx ** 2 + dy ** 2);
+		// if (distance < asteroid.radius + spaceship.width / 2) {
+		const distance1 = Math.sqrt((asteroid.x - spaceship.x + spaceship.width / 2) ** 2 + (asteroid.y - spaceship.y) ** 2);
+		const distance2 = Math.sqrt((asteroid.x - spaceship.x - spaceship.width / 2) ** 2 + (asteroid.y - spaceship.y + spaceship.height / 2) ** 2);
+		const distance3 = Math.sqrt((asteroid.x - spaceship.x - spaceship.width / 2) ** 2 + (asteroid.y - spaceship.y - spaceship.height / 2) ** 2);
+		if (Math.min(distance1, distance2, distance3) < asteroid.radius) {
 			// Collision detected, reset game
+			console.log(spaceship.x, spaceship.y);
+			console.log(asteroid.x, asteroid.y);
+			console.log(distance1, distance2, distance3);
+			console.log(Math.min(distance1, distance2, distance3));
+			console.log(asteroid.radius);
 			asteroids.length = 0;
 			score = 0;
 			spaceship.y = canvas.height / 2;
+			localStorage.setItem('highScore', highScore);
 			return;
 		}
 
 		// Draw asteroid
-		ctx.fillStyle = '#FF0000';
-		ctx.beginPath();
-		ctx.arc(asteroid.x, asteroid.y, asteroid.radius, 0, Math.PI * 2);
-		ctx.fill();
+		context.fillStyle = '#fa0';
+		context.beginPath();
+		context.arc(asteroid.x, asteroid.y, asteroid.radius, 0, Math.PI * 2);
+		context.fill();
 
 		// Remove asteroid if off screen
 		if (asteroid.x + asteroid.radius < 0) {
 			asteroids.splice(index, 1);
-			score++;
 		}
 	});
 
-	// Draw score
-	ctx.fillStyle = '#eee';
-	ctx.font = '24px Arial';
-	ctx.fillText(`Score: ${score}`, 10, 30);
+	// Calculate and draw score
+	score++;
+	if (score > highScore) highScore = score;
+	context.fillStyle = '#eee';
+	context.font = '24px Arial';
+	context.fillText(`Score: ${score}    High Score: ${highScore}`, 10, 30);
 
 	// Request next frame
 	requestAnimationFrame(gameLoop);
@@ -90,28 +104,20 @@ function gameLoop() {
 const keys = {
 	up: false,
 	down: false,
+	left: false,
+	right: false,
 };
-
 document.addEventListener('keydown', (event) => {
-	switch (event.code) {
-		case 'ArrowUp':
-			keys.up = true;
-			break;
-		case 'ArrowDown':
-			keys.down = true;
-			break;
-	}
+	if (event.code === 'ArrowUp') keys.up = true;
+	if (event.code === 'ArrowDown') keys.down = true;
+	if (event.code === 'ArrowLeft') keys.left = true;
+	if (event.code === 'ArrowRight') keys.right = true;
 });
-
 document.addEventListener('keyup', (event) => {
-	switch (event.code) {
-		case 'ArrowUp':
-			keys.up = false;
-			break;
-		case 'ArrowDown':
-			keys.down = false;
-			break;
-	}
+	if (event.code === 'ArrowUp') keys.up = false;
+	if (event.code === 'ArrowDown') keys.down = false;
+	if (event.code === 'ArrowLeft') keys.left = false;
+	if (event.code === 'ArrowRight') keys.right = false;
 });
 
 // Start game loop
