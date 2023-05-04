@@ -16,13 +16,6 @@ const spaceship = {
 	height: 20,
 };
 
-// Draw starfield background
-const stars = 200;
-for (let i = 0; i < stars; i++) {
-    context.fillStyle = '#aaa';
-	context.fillRect(Math.random() * canvas.offsetWidth, Math.random() * canvas.offsetHeight, 1, 1);
-}
-
 function gameLoop() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -33,13 +26,13 @@ function gameLoop() {
 	if (keys.right) spaceship.x += spaceship.speed;
 
 	// Draw spaceship
-	context.fillStyle = '#eee';
-	// context.fillRect(spaceship.x, spaceship.y, spaceship.width, spaceship.height);
+	context.strokeStyle = '#eee';
+	context.lineWidth = 3;
 	context.beginPath();
-	context.moveTo(spaceship.x + spaceship.width / 2, spaceship.y);
-	context.lineTo(spaceship.x - spaceship.width / 2, spaceship.y + spaceship.height / 2);
+	context.moveTo(spaceship.x - spaceship.width / 2, spaceship.y + spaceship.height / 2);
+	context.lineTo(spaceship.x + spaceship.width / 2, spaceship.y);
 	context.lineTo(spaceship.x - spaceship.width / 2, spaceship.y - spaceship.height / 2);
-	context.fill();
+	context.stroke();
 
 	// Spawn new asteroid
 	if (Math.random() < 0.02) {
@@ -93,8 +86,8 @@ function gameLoop() {
 	score++;
 	if (score > highScore) highScore = score;
 	context.fillStyle = '#eee';
-	context.font = '24px Arial';
-	context.fillText(`Score: ${score}    High Score: ${highScore}`, 10, 30);
+	context.font = '18px Calibri';
+	context.fillText(`Score: ${score}    High Score: ${highScore}`, 10, 20);
 
 	// Request next frame
 	requestAnimationFrame(gameLoop);
@@ -120,5 +113,4 @@ document.addEventListener('keyup', (event) => {
 	if (event.code === 'ArrowRight') keys.right = false;
 });
 
-// Start game loop
 gameLoop();
