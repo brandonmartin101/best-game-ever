@@ -6,6 +6,7 @@ canvas.height = 700;
 let score = 0;
 let highScore = localStorage.getItem('highScore') || 0;
 const asteroids = [];
+let asteroidWeight = 0.02;
 
 // Create spaceship object
 const spaceship = {
@@ -35,7 +36,7 @@ function gameLoop() {
 	context.stroke();
 
 	// Spawn new asteroid
-	if (Math.random() < 0.02) {
+	if (Math.random() < asteroidWeight) {
 		const asteroid = {
 			x: canvas.width,
 			y: Math.random() * canvas.height,
@@ -65,6 +66,7 @@ function gameLoop() {
 			console.log(asteroid.radius);
 			asteroids.length = 0;
 			score = 0;
+			asteroidWeight = 0.02;
 			spaceship.y = canvas.height / 2;
 			localStorage.setItem('highScore', highScore);
 			return;
@@ -90,6 +92,7 @@ function gameLoop() {
 	context.fillText(`Score: ${score}    High Score: ${highScore}`, 10, 20);
 
 	// Request next frame
+	if (asteroidWeight < 0.2) asteroidWeight += 0.00005;
 	requestAnimationFrame(gameLoop);
 }
 
