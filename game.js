@@ -26,6 +26,12 @@ function gameLoop() {
 	if (keys.left) spaceship.x -= spaceship.speed;
 	if (keys.right) spaceship.x += spaceship.speed;
 
+	// Check boundaries
+	if (spaceship.x > canvas.width) spaceship.x = canvas.width - spaceship.width;
+	if (spaceship.x < 0) spaceship.x = spaceship.width;
+	if (spaceship.y > canvas.height) spaceship.y = canvas.height - spaceship.height;
+	if (spaceship.y < 0) spaceship.y = spaceship.height;
+
 	// Draw spaceship
 	context.strokeStyle = '#eee';
 	context.lineWidth = 3;
@@ -33,6 +39,18 @@ function gameLoop() {
 	context.moveTo(spaceship.x - spaceship.width / 2, spaceship.y + spaceship.height / 2);
 	context.lineTo(spaceship.x + spaceship.width / 2, spaceship.y);
 	context.lineTo(spaceship.x - spaceship.width / 2, spaceship.y - spaceship.height / 2);
+	context.stroke();
+	context.strokeStyle = '#eee';
+	context.beginPath();
+	context.moveTo(spaceship.x - spaceship.width / 2, spaceship.y + spaceship.height / 2 - 4);
+	context.lineTo(spaceship.x + spaceship.width / 2 - 8, spaceship.y);
+	context.lineTo(spaceship.x - spaceship.width / 2, spaceship.y - spaceship.height / 2 + 4);
+	context.stroke();
+	context.strokeStyle = '#eee';
+	context.beginPath();
+	context.moveTo(spaceship.x - spaceship.width / 2, spaceship.y + spaceship.height / 2 - 8);
+	context.lineTo(spaceship.x + spaceship.width / 2 - 16, spaceship.y);
+	context.lineTo(spaceship.x - spaceship.width / 2, spaceship.y - spaceship.height / 2 + 8);
 	context.stroke();
 
 	// Spawn new asteroid
@@ -59,11 +77,6 @@ function gameLoop() {
 		const distance3 = Math.sqrt((asteroid.x - spaceship.x - spaceship.width / 2) ** 2 + (asteroid.y - spaceship.y - spaceship.height / 2) ** 2);
 		if (Math.min(distance1, distance2, distance3) < asteroid.radius) {
 			// Collision detected, reset game
-			console.log(spaceship.x, spaceship.y);
-			console.log(asteroid.x, asteroid.y);
-			console.log(distance1, distance2, distance3);
-			console.log(Math.min(distance1, distance2, distance3));
-			console.log(asteroid.radius);
 			asteroids.length = 0;
 			score = 0;
 			asteroidWeight = 0.02;
