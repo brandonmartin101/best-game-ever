@@ -7,8 +7,8 @@ let score = 0;
 let highScore = localStorage.getItem('highScore') || 0;
 const asteroids = [];
 let asteroidWeight = 0.02;
+let asteroidColors = [randomColor(), randomColor(), randomColor()];
 let spaceshipColors = [randomColor(), randomColor(), randomColor()];
-console.log(spaceshipColors);
 
 // Create spaceship object
 const spaceship = {
@@ -73,28 +73,34 @@ function gameLoop() {
 	// Move asteroids
 	asteroids.forEach((asteroid, index) => {
 		asteroid.x -= asteroid.speed;
-		// Check for collision
-		// const dx = asteroid.x - (spaceship.x + spaceship.width / 2);
-		// const dy = asteroid.y - (spaceship.y + spaceship.height);
-		// const distance = Math.sqrt(dx ** 2 + dy ** 2);
-		// if (distance < asteroid.radius + spaceship.width / 2) {
 		const distance1 = Math.sqrt((asteroid.x - spaceship.x + spaceship.width / 2) ** 2 + (asteroid.y - spaceship.y) ** 2);
 		const distance2 = Math.sqrt((asteroid.x - spaceship.x - spaceship.width / 2) ** 2 + (asteroid.y - spaceship.y + spaceship.height / 2) ** 2);
 		const distance3 = Math.sqrt((asteroid.x - spaceship.x - spaceship.width / 2) ** 2 + (asteroid.y - spaceship.y - spaceship.height / 2) ** 2);
 		if (Math.min(distance1, distance2, distance3) < asteroid.radius) {
 			// Collision detected, reset game
-			asteroids.length = 0;
 			score = 0;
+			asteroids.length = 0;
 			asteroidWeight = 0.02;
+			asteroidColors = [randomColor(), randomColor(), randomColor()];
+			spaceship.x = 100;
 			spaceship.y = canvas.height / 2;
+			spaceshipColors = [randomColor(), randomColor(), randomColor()];
 			localStorage.setItem('highScore', highScore);
 			return;
 		}
 
 		// Draw asteroid
-		context.fillStyle = '#fa0';
+		context.fillStyle = asteroidColors[0];
 		context.beginPath();
 		context.arc(asteroid.x, asteroid.y, asteroid.radius, 0, Math.PI * 2);
+		context.fill();
+		context.fillStyle = asteroidColors[1];
+		context.beginPath();
+		context.arc(asteroid.x, asteroid.y, asteroid.radius*0.66, 0, Math.PI * 2);
+		context.fill();
+		context.fillStyle = asteroidColors[2];
+		context.beginPath();
+		context.arc(asteroid.x, asteroid.y, asteroid.radius*0.33, 0, Math.PI * 2);
 		context.fill();
 
 		// Remove asteroid if off screen
