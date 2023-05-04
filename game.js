@@ -7,6 +7,8 @@ let score = 0;
 let highScore = localStorage.getItem('highScore') || 0;
 const asteroids = [];
 let asteroidWeight = 0.02;
+let spaceshipColors = [randomColor(), randomColor(), randomColor()];
+console.log(spaceshipColors);
 
 // Create spaceship object
 const spaceship = {
@@ -16,6 +18,10 @@ const spaceship = {
 	width: 20,
 	height: 20,
 };
+
+function randomColor() {
+	return `#${Math.floor(Math.random()*16777215).toString(16)}`;
+}
 
 function gameLoop() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
@@ -33,20 +39,20 @@ function gameLoop() {
 	if (spaceship.y < 0) spaceship.y = spaceship.height;
 
 	// Draw spaceship
-	context.strokeStyle = '#eee';
+	context.strokeStyle = spaceshipColors[0];
 	context.lineWidth = 3;
 	context.beginPath();
 	context.moveTo(spaceship.x - spaceship.width / 2, spaceship.y + spaceship.height / 2);
 	context.lineTo(spaceship.x + spaceship.width / 2, spaceship.y);
 	context.lineTo(spaceship.x - spaceship.width / 2, spaceship.y - spaceship.height / 2);
 	context.stroke();
-	context.strokeStyle = '#eee';
+	context.strokeStyle = spaceshipColors[1];
 	context.beginPath();
 	context.moveTo(spaceship.x - spaceship.width / 2, spaceship.y + spaceship.height / 2 - 4);
 	context.lineTo(spaceship.x + spaceship.width / 2 - 8, spaceship.y);
 	context.lineTo(spaceship.x - spaceship.width / 2, spaceship.y - spaceship.height / 2 + 4);
 	context.stroke();
-	context.strokeStyle = '#eee';
+	context.strokeStyle = spaceshipColors[2];
 	context.beginPath();
 	context.moveTo(spaceship.x - spaceship.width / 2, spaceship.y + spaceship.height / 2 - 8);
 	context.lineTo(spaceship.x + spaceship.width / 2 - 16, spaceship.y);
