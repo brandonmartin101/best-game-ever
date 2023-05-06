@@ -8,19 +8,18 @@ let highScore = localStorage.getItem('highScore') || 0;
 const asteroids = [];
 let asteroidWeight = 0.02;
 let asteroidColors = [randomColor(), randomColor(), randomColor()];
-let spaceshipColors = [randomColor(), randomColor(), randomColor()];
-
-// Create spaceship object
 const spaceship = {
 	x: 100,
 	y: canvas.height / 2,
 	speed: 7,
 	width: 20,
 	height: 20,
+	colors: [randomColor(), randomColor(), randomColor()],
 };
 
 function randomColor() {
-	return `#${Math.floor(Math.random()*16777215).toString(16)}`;
+	// Random hex color from https://css-tricks.com/snippets/javascript/random-hex-color/
+	return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 }
 
 function gameLoop() {
@@ -39,20 +38,21 @@ function gameLoop() {
 	if (spaceship.y < 0) spaceship.y = spaceship.height;
 
 	// Draw spaceship
-	context.strokeStyle = spaceshipColors[0];
+	// TODO clean up repetitive code here
+	context.strokeStyle = spaceship.colors[0];
 	context.lineWidth = 3;
 	context.beginPath();
 	context.moveTo(spaceship.x - spaceship.width / 2, spaceship.y + spaceship.height / 2);
 	context.lineTo(spaceship.x + spaceship.width / 2, spaceship.y);
 	context.lineTo(spaceship.x - spaceship.width / 2, spaceship.y - spaceship.height / 2);
 	context.stroke();
-	context.strokeStyle = spaceshipColors[1];
+	context.strokeStyle = spaceship.colors[1];
 	context.beginPath();
 	context.moveTo(spaceship.x - spaceship.width / 2, spaceship.y + spaceship.height / 2 - 4);
 	context.lineTo(spaceship.x + spaceship.width / 2 - 8, spaceship.y);
 	context.lineTo(spaceship.x - spaceship.width / 2, spaceship.y - spaceship.height / 2 + 4);
 	context.stroke();
-	context.strokeStyle = spaceshipColors[2];
+	context.strokeStyle = spaceship.colors[2];
 	context.beginPath();
 	context.moveTo(spaceship.x - spaceship.width / 2, spaceship.y + spaceship.height / 2 - 8);
 	context.lineTo(spaceship.x + spaceship.width / 2 - 16, spaceship.y);
@@ -66,6 +66,7 @@ function gameLoop() {
 			y: Math.random() * canvas.height,
 			speed: Math.random() * 5 + 2,
 			radius: Math.random() * 30 + 10,
+			colors: [randomColor(), randomColor(), randomColor()],
 		};
 		asteroids.push(asteroid);
 	}
@@ -81,26 +82,26 @@ function gameLoop() {
 			score = 0;
 			asteroids.length = 0;
 			asteroidWeight = 0.02;
-			asteroidColors = [randomColor(), randomColor(), randomColor()];
 			spaceship.x = 100;
 			spaceship.y = canvas.height / 2;
-			spaceshipColors = [randomColor(), randomColor(), randomColor()];
+			spaceship.colors = [randomColor(), randomColor(), randomColor()];
 			localStorage.setItem('highScore', highScore);
 			return;
 		}
 
 		// Draw asteroid
-		context.fillStyle = asteroidColors[0];
+		// TODO clean up repetitive code here
+		context.fillStyle = asteroid.colors[0];
 		context.beginPath();
 		context.arc(asteroid.x, asteroid.y, asteroid.radius, 0, Math.PI * 2);
 		context.fill();
-		context.fillStyle = asteroidColors[1];
+		context.fillStyle = asteroid.colors[1];
 		context.beginPath();
-		context.arc(asteroid.x, asteroid.y, asteroid.radius*0.66, 0, Math.PI * 2);
+		context.arc(asteroid.x, asteroid.y, asteroid.radius * 0.66, 0, Math.PI * 2);
 		context.fill();
-		context.fillStyle = asteroidColors[2];
+		context.fillStyle = asteroid.colors[2];
 		context.beginPath();
-		context.arc(asteroid.x, asteroid.y, asteroid.radius*0.33, 0, Math.PI * 2);
+		context.arc(asteroid.x, asteroid.y, asteroid.radius * 0.33, 0, Math.PI * 2);
 		context.fill();
 
 		// Remove asteroid if off screen
