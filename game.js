@@ -62,7 +62,7 @@ function gameLoop() {
 	// Spawn new asteroid
 	if (Math.random() < asteroidWeight) {
 		const asteroid = {
-			x: canvas.width,
+			x: canvas.width + 100,
 			y: Math.random() * canvas.height,
 			speed: Math.random() * 5 + 2,
 			radius: Math.random() * 30 + 10,
