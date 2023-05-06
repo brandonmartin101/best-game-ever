@@ -1,20 +1,28 @@
+@font-face {
+	font-family: 'Space';
+	src: url(./fonts/SpaceMono-Regular.ttf);
+}
+
 body {
 	text-align: center;
+	font-family: Space;
 }
 h1 {
-	margin: 40px auto 20px;
+	margin: 30px auto 20px;
+	font-size: 1.4rem;
 }
 p {
 	max-width: 500px;
 	margin: 0 auto;
-    line-height: 1.4rem;
+	line-height: 1.2rem;
+	font-size: 1rem;
 }
 canvas {
 	border: 1px solid #222;
 	background: #222;
-    background: url('stars.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-	margin: 40px auto 0;
+	background: url('./assets/stars.jpg');
+	background-size: cover;
+	background-repeat: no-repeat;
+	margin: 30px auto 0;
 	box-shadow: 0 0 15px black;
 }

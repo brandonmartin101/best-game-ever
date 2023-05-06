@@ -1,13 +1,13 @@
 // Get canvas element and context
 const canvas = document.getElementById('game-canvas');
-const context = canvas.getContext('2d');
 canvas.width = 1000;
 canvas.height = 700;
+const context = canvas.getContext('2d');
+context.font = '18px Space';
 let score = 0;
 let highScore = localStorage.getItem('highScore') || 0;
 const asteroids = [];
 let asteroidWeight = 0.02;
-let asteroidColors = [randomColor(), randomColor(), randomColor()];
 const spaceship = {
 	x: 100,
 	y: canvas.height / 2,
@@ -114,7 +114,6 @@ function gameLoop() {
 	score++;
 	if (score > highScore) highScore = score;
 	context.fillStyle = '#eee';
-	context.font = '18px Calibri';
 	context.fillText(`Score: ${score}    High Score: ${highScore}`, 10, 20);
 
 	// Request next frame
