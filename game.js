@@ -17,6 +17,8 @@ const spaceship = {
 	colors: [randomColor(), randomColor(), randomColor()],
 };
 
+// TODO start some background music
+
 function randomColor() {
 	// Random hex color from https://css-tricks.com/snippets/javascript/random-hex-color/
 	return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
@@ -52,6 +54,7 @@ function gameLoop() {
 			colors: [randomColor(), randomColor(), randomColor()],
 		};
 		asteroids.push(asteroid);
+		// TODO play some sound when an asteroid spawns
 	}
 
 	// Move asteroids
@@ -60,6 +63,7 @@ function gameLoop() {
 		if (Math.min(getDistances(spaceship, asteroid)) < asteroid.radius) {
 			// Collision detected, reset game
 			// TODO need a death animation of some kind
+			// TODO also death sound
 			console.log(spaceship, asteroid, getDistances(spaceship, asteroid));
 			score = 0;
 			asteroids.length = 0;
@@ -68,7 +72,6 @@ function gameLoop() {
 			spaceship.y = canvas.height / 2;
 			spaceship.colors = [randomColor(), randomColor(), randomColor()];
 			localStorage.setItem('highScore', highScore);
-			alert('YOUR SHIP A-SPLODE');
 			return;
 		}
 
@@ -94,6 +97,7 @@ function gameLoop() {
 	requestAnimationFrame(gameLoop);
 }
 
+// Drawing functions
 function drawSpaceship(spaceship, offset) {
 	context.strokeStyle = spaceship.colors[offset];
 	context.lineWidth = 3;
@@ -103,7 +107,6 @@ function drawSpaceship(spaceship, offset) {
 	context.lineTo(spaceship.x - spaceship.width / 2, spaceship.y - spaceship.height / 2 + offset * 4);
 	context.stroke();
 }
-
 function drawAsteroid(asteroid, offset) {
 	context.fillStyle = asteroid.colors[offset];
 	context.beginPath();
@@ -111,6 +114,7 @@ function drawAsteroid(asteroid, offset) {
 	context.fill();
 }
 
+// Calculate distances between ship vertices and incoming asteroids
 function getDistances(spaceship, asteroid) {
 	// TODO fix the collision issues, it's not quite right
 	const distanceTop = Math.sqrt((asteroid.x - spaceship.x - spaceship.width / 2) ** 2 + (asteroid.y - spaceship.y + spaceship.height / 2) ** 2);
