@@ -57,12 +57,10 @@ function gameLoop() {
 	// Move asteroids
 	asteroids.forEach((asteroid, index) => {
 		asteroid.x -= asteroid.speed;
-		const distance1 = Math.sqrt((asteroid.x - spaceship.x + spaceship.width / 2) ** 2 + (asteroid.y - spaceship.y) ** 2);
-		const distance2 = Math.sqrt((asteroid.x - spaceship.x - spaceship.width / 2) ** 2 + (asteroid.y - spaceship.y + spaceship.height / 2) ** 2);
-		const distance3 = Math.sqrt((asteroid.x - spaceship.x - spaceship.width / 2) ** 2 + (asteroid.y - spaceship.y - spaceship.height / 2) ** 2);
-		if (Math.min(distance1, distance2, distance3) < asteroid.radius) {
+		if (Math.min(getDistances(spaceship, asteroid)) < asteroid.radius) {
 			// Collision detected, reset game
 			// TODO need a death animation of some kind
+			console.log(spaceship, asteroid, getDistances(spaceship, asteroid));
 			score = 0;
 			asteroids.length = 0;
 			asteroidWeight = 0.02;
@@ -70,6 +68,7 @@ function gameLoop() {
 			spaceship.y = canvas.height / 2;
 			spaceship.colors = [randomColor(), randomColor(), randomColor()];
 			localStorage.setItem('highScore', highScore);
+			alert('YOUR SHIP A-SPLODE');
 			return;
 		}
 
@@ -108,8 +107,16 @@ function drawSpaceship(spaceship, offset) {
 function drawAsteroid(asteroid, offset) {
 	context.fillStyle = asteroid.colors[offset];
 	context.beginPath();
-	context.arc(asteroid.x, asteroid.y, asteroid.radius * (offset+1)*0.33, 0, Math.PI * 2);
+	context.arc(asteroid.x, asteroid.y, asteroid.radius * (offset + 1) * 0.33, 0, Math.PI * 2);
 	context.fill();
+}
+
+function getDistances(spaceship, asteroid) {
+	// TODO fix the collision issues, it's not quite right
+	const distanceTop = Math.sqrt((asteroid.x - spaceship.x - spaceship.width / 2) ** 2 + (asteroid.y - spaceship.y + spaceship.height / 2) ** 2);
+	const distanceApex = Math.sqrt((asteroid.x - spaceship.x + spaceship.width / 2) ** 2 + (asteroid.y - spaceship.y) ** 2);
+	const distanceBot = Math.sqrt((asteroid.x - spaceship.x - spaceship.width / 2) ** 2 + (asteroid.y - spaceship.y - spaceship.height / 2) ** 2);
+	return Math.min(distanceApex, distanceTop, distanceBot);
 }
 
 // Handle key events
