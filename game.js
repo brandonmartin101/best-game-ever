@@ -1,4 +1,4 @@
-// Get canvas element and context
+// Initial canvas, context, and objects setup
 const canvas = document.getElementById('game-canvas');
 canvas.width = 1000;
 canvas.height = 700;
@@ -38,26 +38,9 @@ function gameLoop() {
 	if (spaceship.y < 0) spaceship.y = spaceship.height;
 
 	// Draw spaceship
-	// TODO clean up repetitive code here
-	context.strokeStyle = spaceship.colors[0];
-	context.lineWidth = 3;
-	context.beginPath();
-	context.moveTo(spaceship.x - spaceship.width / 2, spaceship.y + spaceship.height / 2);
-	context.lineTo(spaceship.x + spaceship.width / 2, spaceship.y);
-	context.lineTo(spaceship.x - spaceship.width / 2, spaceship.y - spaceship.height / 2);
-	context.stroke();
-	context.strokeStyle = spaceship.colors[1];
-	context.beginPath();
-	context.moveTo(spaceship.x - spaceship.width / 2, spaceship.y + spaceship.height / 2 - 4);
-	context.lineTo(spaceship.x + spaceship.width / 2 - 8, spaceship.y);
-	context.lineTo(spaceship.x - spaceship.width / 2, spaceship.y - spaceship.height / 2 + 4);
-	context.stroke();
-	context.strokeStyle = spaceship.colors[2];
-	context.beginPath();
-	context.moveTo(spaceship.x - spaceship.width / 2, spaceship.y + spaceship.height / 2 - 8);
-	context.lineTo(spaceship.x + spaceship.width / 2 - 16, spaceship.y);
-	context.lineTo(spaceship.x - spaceship.width / 2, spaceship.y - spaceship.height / 2 + 8);
-	context.stroke();
+	drawSpaceship(spaceship, 0);
+	drawSpaceship(spaceship, 1);
+	drawSpaceship(spaceship, 2);
 
 	// Spawn new asteroid
 	if (Math.random() < asteroidWeight) {
@@ -79,6 +62,7 @@ function gameLoop() {
 		const distance3 = Math.sqrt((asteroid.x - spaceship.x - spaceship.width / 2) ** 2 + (asteroid.y - spaceship.y - spaceship.height / 2) ** 2);
 		if (Math.min(distance1, distance2, distance3) < asteroid.radius) {
 			// Collision detected, reset game
+			// TODO need a death animation of some kind
 			score = 0;
 			asteroids.length = 0;
 			asteroidWeight = 0.02;
@@ -90,21 +74,11 @@ function gameLoop() {
 		}
 
 		// Draw asteroid
-		// TODO clean up repetitive code here
-		context.fillStyle = asteroid.colors[0];
-		context.beginPath();
-		context.arc(asteroid.x, asteroid.y, asteroid.radius, 0, Math.PI * 2);
-		context.fill();
-		context.fillStyle = asteroid.colors[1];
-		context.beginPath();
-		context.arc(asteroid.x, asteroid.y, asteroid.radius * 0.66, 0, Math.PI * 2);
-		context.fill();
-		context.fillStyle = asteroid.colors[2];
-		context.beginPath();
-		context.arc(asteroid.x, asteroid.y, asteroid.radius * 0.33, 0, Math.PI * 2);
-		context.fill();
+		drawAsteroid(asteroid, 2);
+		drawAsteroid(asteroid, 1);
+		drawAsteroid(asteroid, 0);
 
-		// Remove asteroid if off screen
+		// Remove asteroid when off screen
 		if (asteroid.x + asteroid.radius < 0) {
 			asteroids.splice(index, 1);
 		}
@@ -119,6 +93,23 @@ function gameLoop() {
 	// Request next frame
 	if (asteroidWeight < 0.2) asteroidWeight += 0.00005;
 	requestAnimationFrame(gameLoop);
+}
+
+function drawSpaceship(spaceship, offset) {
+	context.strokeStyle = spaceship.colors[offset];
+	context.lineWidth = 3;
+	context.beginPath();
+	context.moveTo(spaceship.x - spaceship.width / 2, spaceship.y + spaceship.height / 2 - offset * 4);
+	context.lineTo(spaceship.x + spaceship.width / 2 - offset * 8, spaceship.y);
+	context.lineTo(spaceship.x - spaceship.width / 2, spaceship.y - spaceship.height / 2 + offset * 4);
+	context.stroke();
+}
+
+function drawAsteroid(asteroid, offset) {
+	context.fillStyle = asteroid.colors[offset];
+	context.beginPath();
+	context.arc(asteroid.x, asteroid.y, asteroid.radius * (offset+1)*0.33, 0, Math.PI * 2);
+	context.fill();
 }
 
 // Handle key events
