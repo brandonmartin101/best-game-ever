@@ -144,3 +144,11 @@ document.addEventListener('keyup', (event) => {
 });
 
 gameLoop();
+
+// TODO generate a favicon using the spaceship colors
+// Ideas from https://cloudinary.com/blog/guest_post/build-dynamic-favicon-with-javascript
+
+// let favicon = document.getElementById('favicon');
+// let faviconSize = 16;
+// let favCanvas = document.createElement('canvas');
+// let favContext = favCanvas.getContext('2d');
